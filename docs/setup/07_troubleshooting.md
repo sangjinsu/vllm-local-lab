@@ -16,6 +16,33 @@ uv run python scripts/local_serve_help.py
 uv run python scripts/healthcheck.py
 ```
 
+## `zsh: command not found: vllm`
+
+`vllm` CLI가 현재 shell에서 보이지 않는 상태입니다.
+
+vLLM source build 환경을 사용 중이라면 venv를 활성화했는지 확인합니다.
+
+```bash
+cd ~/Projects/vendor/vllm
+source .venv/bin/activate
+which vllm
+vllm --help
+```
+
+이 repo의 기본 `uv sync --extra dev`는 Python client 학습용 dependency만 설치합니다. vLLM server 실행 환경은 별도로 준비할 수 있습니다.
+
+## `nvidia-cudnn-frontend` wheel 오류
+
+Apple Silicon macOS에서 다음과 비슷한 오류가 날 수 있습니다.
+
+```text
+nvidia-cudnn-frontend ... can't be installed because it doesn't have a source distribution or wheel for the current platform
+```
+
+이 경우 `uv sync --extra serve`를 계속 반복하지 마세요. macOS arm64에서 CUDA/NVIDIA 계열 wheel이 없어 생기는 resolver 실패입니다.
+
+대신 [Apple Silicon 환경](04_apple_silicon.md)의 vLLM source build 경로를 사용하세요.
+
 ## 모델이 메모리에 올라가지 않을 때
 
 작은 profile을 사용합니다.
@@ -26,6 +53,75 @@ DEFAULT_MAX_MODEL_LEN=2048
 ```
 
 `.env`를 바꾼 뒤에는 vLLM server를 다시 시작하세요.
+
+CPU backend에서 다음과 비슷한 오류가 날 수도 있습니다.
+
+```text
+Available memory ... is less than desired CPU memory utilization
+```
+
+CPU backend에서는 이름과 달리 `--gpu-memory-utilization`이 CPU memory 예약 비율에도 영향을 줍니다. Mac mini처럼 여유 메모리가 적은 환경에서는 낮게 시작하세요.
+
+```bash
+vllm serve Qwen/Qwen2.5-0.5B-Instruct \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --dtype float32 \
+  --max-model-len 512 \
+  --gpu-memory-utilization 0.2 \
+  --enforce-eager \
+  --max-num-seqs 1 \
+  --max-num-batched-tokens 512
+```
+
+## `No available shared memory broadcast block found`
+
+server는 떠 있지만 generation worker가 compilation 또는 무거운 작업에서 오래 걸리는 상태일 수 있습니다.
+
+Apple Silicon CPU backend에서는 server를 `Ctrl-C`로 끊고 다음처럼 compile 부담을 줄여 다시 시작하세요.
+
+```bash
+vllm serve Qwen/Qwen2.5-0.5B-Instruct \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --dtype float32 \
+  --max-model-len 512 \
+  --gpu-memory-utilization 0.2 \
+  --enforce-eager \
+  --max-num-seqs 1 \
+  --max-num-batched-tokens 512
+```
+
+그래도 느리면 `--max-model-len 256`, `--gpu-memory-utilization 0.15`, `--max-num-batched-tokens 256`까지 낮춰 마지막으로 확인합니다.
+
+## `maximum context length` 또는 `400 Bad Request`
+
+다음과 비슷한 오류는 입력 prompt와 출력 token이 server의 context 길이를 넘었다는 뜻입니다.
+
+```text
+maximum context length is 256 tokens
+you requested 256 output tokens
+```
+
+`max-model-len`은 입력 prompt와 출력 token을 합친 전체 한도입니다. `--max-model-len 256`으로 server를 띄우고 `DEFAULT_MAX_TOKENS=256`을 요청하면 입력 prompt가 들어갈 공간이 없습니다.
+
+`.env`에서 출력 token을 낮추세요.
+
+```env
+DEFAULT_MAX_TOKENS=32
+```
+
+그 다음 다시 호출합니다.
+
+```bash
+uv run python scripts/call_chat.py
+```
+
+## 답변 내용이 틀릴 때
+
+local server 호출이 성공해도 작은 모델이 틀린 답을 할 수 있습니다. 예를 들어 vLLM을 잘못 풀이하는 답변이 나올 수 있습니다.
+
+setup 단계에서는 먼저 `Python client → localhost:8000/v1 → vLLM server` 경로가 열렸는지 확인하는 것이 목표입니다. 답변 품질은 model 크기, prompt, sampling, `DEFAULT_MAX_TOKENS`를 조정하면서 별도로 봅니다.
 
 ## Hugging Face 접근이 실패할 때
 

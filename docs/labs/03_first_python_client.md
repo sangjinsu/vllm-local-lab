@@ -45,6 +45,14 @@ client = OpenAI(
 uv run python scripts/local_serve_help.py
 ```
 
+`400 Bad Request`와 함께 `maximum context length` 오류가 나오면 `.env`의 출력 token을 낮추세요.
+
+```env
+DEFAULT_MAX_TOKENS=32
+```
+
+`max-model-len`은 입력 prompt와 출력 token을 합친 한도입니다. 작은 context로 server를 띄운 경우 `DEFAULT_MAX_TOKENS=256`은 너무 클 수 있습니다.
+
 ## 다음 챕터
 
 [실습 4: Sampling 설정 바꾸기](04_sampling.md)

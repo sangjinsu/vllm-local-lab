@@ -1,5 +1,9 @@
 # vLLM Local Lab
 
+> **공사중 / 테스트 중**
+>
+> 이 프로젝트는 현재 실제 local setup을 검증하면서 문서와 예제를 조정하는 중입니다. 특히 Apple Silicon macOS의 vLLM 실행 경로는 설치 방식과 vLLM 버전에 따라 달라질 수 있으므로, 문제가 생기면 [Apple Silicon 환경](docs/setup/04_apple_silicon.md)과 [문제 해결](docs/setup/07_troubleshooting.md)을 먼저 확인하세요.
+
 로컬에서 vLLM을 실행하고 Python으로 호출해 보며, LLM serving의 실무 감각을 단계적으로 익히는 학습 프로젝트입니다.
 
 이 프로젝트의 기준은 다음과 같습니다.
