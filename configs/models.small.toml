@@ -1,0 +1,19 @@
+[profiles.tiny]
+model = "Qwen/Qwen2.5-0.5B-Instruct"
+purpose = "First successful run on limited resources"
+
+[profiles.default]
+model = "Qwen/Qwen3-0.6B"
+purpose = "Default local learning model"
+
+[profiles.small-chat]
+model = "Qwen/Qwen2.5-1.5B-Instruct"
+purpose = "Better chat quality while still small"
+
+[profiles.balanced]
+model = "Qwen/Qwen2.5-3B-Instruct"
+purpose = "Local GPU learning when resources allow"
+
+[profiles.advanced]
+model = "meta-llama/Llama-3.2-3B-Instruct"
+purpose = "Optional advanced model, may require Hugging Face access"

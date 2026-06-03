@@ -1,0 +1,7 @@
+[benchmark]
+description = "Local benchmark defaults are controlled by .env. This file documents the presets used by the lab."
+
+[benchmark.prompt_presets]
+short = "Small prompt for quick latency checks"
+medium = "Moderate prompt for normal local experiments"
+long = "Longer repeated prompt for prefix caching comparisons"

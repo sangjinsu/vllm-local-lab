@@ -1,0 +1,4 @@
+[prompts]
+short = "Explain vLLM in one simple sentence."
+medium = "Explain why an OpenAI-compatible API makes local vLLM experiments easier for a Python learner."
+long = "You are helping a beginner learn local LLM serving. Explain the path from starting a vLLM server to calling it with a Python client, then mention one setting they can change."

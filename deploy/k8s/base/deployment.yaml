@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-server
+  namespace: vllm-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-server
+  template:
+    metadata:
+      labels:
+        app: vllm-server
+    spec:
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MODEL_DEFAULT
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: MODEL_DEFAULT
+                  optional: true
+            - name: DEFAULT_DTYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: DEFAULT_DTYPE
+                  optional: true
+            - name: DEFAULT_MAX_MODEL_LEN
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: DEFAULT_MAX_MODEL_LEN
+                  optional: true
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token-secret
+                  key: HF_TOKEN
+                  optional: true
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - >
+              vllm serve "${MODEL_DEFAULT:-Qwen/Qwen3-0.6B}"
+              --host 0.0.0.0
+              --port 8000
+              --dtype "${DEFAULT_DTYPE:-auto}"
+              --max-model-len "${DEFAULT_MAX_MODEL_LEN:-4096}"

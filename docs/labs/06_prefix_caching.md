@@ -1,0 +1,56 @@
+# 실습 6: Prefix caching
+
+[전체 목차](../README.md) | 이전: [실습 5](05_local_benchmark.md) | 다음: [실습 7](07_lora_serving.md)
+
+## 이번 챕터 목표
+
+반복되는 긴 prompt에서 prefix caching이 어떤 상황에 도움이 되는지 실험합니다.
+
+## 예상 시간
+
+15분
+
+## 시작 전 확인
+
+local vLLM server를 재시작할 수 있어야 합니다.
+
+## 실행
+
+`.env`를 설정합니다.
+
+```env
+ENABLE_PREFIX_CACHING=true
+BENCHMARK_PROMPT_PRESET=long
+```
+
+server 명령을 다시 출력합니다.
+
+```bash
+uv run python scripts/local_serve_help.py
+```
+
+출력된 명령에 `--enable-prefix-caching`이 포함되는지 확인하고 server를 다시 시작합니다.
+
+benchmark를 실행합니다.
+
+```bash
+uv run python scripts/run_benchmark.py
+```
+
+## 성공 확인
+
+`results/benchmarks/latest.md`가 생성되고 `Prefix Cache` 값이 `true`로 기록되면 성공입니다.
+
+## 비교해 보기
+
+다음 값으로 바꾸고 다시 실행해 비교합니다.
+
+```env
+ENABLE_PREFIX_CACHING=false
+```
+
+prefix caching은 모든 workload에서 항상 빨라지는 기능이 아닙니다. 반복 prefix가 있을 때 효과를 기대할 수 있습니다.
+
+## 다음 챕터
+
+[실습 7: LoRA serving](07_lora_serving.md)
