@@ -123,6 +123,45 @@ local server 호출이 성공해도 작은 모델이 틀린 답을 할 수 있�
 
 setup 단계에서는 먼저 `Python client → localhost:8000/v1 → vLLM server` 경로가 열렸는지 확인하는 것이 목표입니다. 답변 품질은 model 크기, prompt, sampling, `DEFAULT_MAX_TOKENS`를 조정하면서 별도로 봅니다.
 
+## LoRA adapter 경로가 실패할 때
+
+`LORA_MODULE_PATH`에는 실제 디렉터리 경로를 넣어야 합니다.
+
+다음 값은 문서용 placeholder라서 그대로 쓰면 동작하지 않습니다.
+
+```env
+LORA_MODULE_PATH=/path/to/local/adapter
+```
+
+Mac에서 예시 adapter를 만든 경우처럼 실제 경로를 사용하세요.
+
+```env
+LORA_MODULE_PATH=/Users/<your-name>/Models/my-lora-adapter
+```
+
+다음 명령으로 구조를 먼저 확인합니다.
+
+```bash
+uv run python scripts/run_lora_test.py
+```
+
+## LoRA adapter 파일이 없을 때
+
+`run_lora_test.py`가 다음 파일을 확인합니다.
+
+```text
+adapter_config.json
+adapter_model.safetensors
+```
+
+둘 중 하나라도 `missing`이면 실제 LoRA serving을 시작할 수 없습니다. adapter를 다시 내려받거나, 학습 결과물이 저장된 디렉터리를 `LORA_MODULE_PATH`로 지정하세요.
+
+## placeholder adapter를 실제 serving에 쓰려 할 때
+
+예시 학습용으로 만든 `adapter_model.safetensors`가 매우 작다면 실제 LoRA weight가 아닐 가능성이 큽니다.
+
+이 파일은 `.env` 설정, directory 구조, script 검증 흐름을 배우기 위한 placeholder입니다. 실제 LoRA 효과를 확인하려면 학습된 adapter의 `adapter_config.json`과 `adapter_model.safetensors`를 사용해야 합니다.
+
 ## Hugging Face 접근이 실패할 때
 
 일부 선택 모델은 Hugging Face 접근 권한이 필요할 수 있습니다.

@@ -29,7 +29,7 @@
 | 4 | [Sampling 설정 바꾸기](labs/04_sampling.md) | `temperature`, `top_p`, `max_tokens` 비교 |
 | 5 | [로컬 benchmark](labs/05_local_benchmark.md) | latency와 throughput 보고서 생성 |
 | 6 | [Prefix caching](labs/06_prefix_caching.md) | 반복 prompt 실험 |
-| 7 | [LoRA serving](labs/07_lora_serving.md) | 기존 LoRA adapter 설정 확인 |
+| 7 | [LoRA serving](labs/07_lora_serving.md) | LoRA adapter 구조와 serving 옵션 확인 |
 | 8 | [Speculative decoding](labs/08_speculative_decoding.md) | baseline과 speculative 설정 비교 |
 | 9 | [Docker smoke test](labs/09_docker_smoke.md) | Docker 서버와 같은 Python client 확인 |
 | 10 | [Kubernetes kind smoke test](labs/10_kubernetes_kind_smoke.md) | kind 서버와 같은 Python client 확인 |

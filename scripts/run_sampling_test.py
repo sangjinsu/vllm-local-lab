@@ -6,7 +6,7 @@ from vllm_lab.config import settings
 
 def main() -> None:
     client = create_client()
-    prompt = "Write one practical reason to use a local vLLM server."
+    prompt = "vLLM is an LLM serving engine. Write one practical reason to run a local vLLM server."
     samples = [
         ("낮은 temperature", 0.2, settings.default_top_p),
         ("기본 temperature", settings.default_temperature, settings.default_top_p),

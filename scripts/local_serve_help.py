@@ -15,6 +15,10 @@ def main() -> None:
     if settings.enable_prefix_caching:
         command[-1] = f"{command[-1]} \\"
         command.append("  --enable-prefix-caching")
+    if settings.enable_lora and settings.lora_module_name and settings.lora_module_path:
+        command[-1] = f"{command[-1]} \\"
+        command.append("  --enable-lora \\")
+        command.append(f"  --lora-modules {settings.lora_module_name}={settings.lora_module_path}")
     print("\n".join(command))
 
 
