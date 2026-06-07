@@ -31,4 +31,5 @@ flowchart LR
 
 ## 관련 문서
 
-[실습 5: 로컬 benchmark](../labs/05_local_benchmark.md)
+- [실습 5: 로컬 benchmark](../labs/05_local_benchmark.md)
+- 더 깊이: [심화 1: 추론 성능 지표](../deep-dive/01_inference_metrics.md), [심화 7: vLLM 엔진 아키텍처](../deep-dive/07_vllm_engine_architecture.md)

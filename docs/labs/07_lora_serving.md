@@ -110,6 +110,12 @@ PY
 - `adapter_config.json` 또는 `adapter_model.safetensors`가 없으면 실제 LoRA serving을 시작할 수 없습니다.
 - placeholder `adapter_model.safetensors`는 실제 학습된 weight가 아니므로 server 시작 또는 응답 품질 검증에는 사용할 수 없습니다.
 
+## 더 깊이 이해하기
+
+adapter가 왜 작은지(저랭크), QLoRA, vLLM의 멀티 어댑터 서빙은 다음 심화 문서에서 다룹니다.
+
+- [심화 9: LoRA와 QLoRA](../deep-dive/09_lora_and_qlora.md)
+
 ## 다음 챕터
 
 [실습 8: Speculative decoding](08_speculative_decoding.md)

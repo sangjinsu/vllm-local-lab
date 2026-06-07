@@ -57,6 +57,13 @@ ENABLE_PREFIX_CACHING=false
 
 prefix caching은 모든 workload에서 항상 빨라지는 기능이 아닙니다. 반복 prefix가 있을 때 효과를 기대할 수 있습니다.
 
+## 더 깊이 이해하기
+
+이번 결과가 왜 이렇게 나오는지(블록 해시 공유, 효과 조건)는 다음 심화 문서에서 다룹니다.
+
+- [심화 4: Prefix caching 내부 동작](../deep-dive/04_prefix_caching_internals.md)
+- 전제 개념: [심화 2: KV cache와 PagedAttention](../deep-dive/02_kv_cache_and_paged_attention.md)
+
 ## 다음 챕터
 
 [실습 7: LoRA serving](07_lora_serving.md)

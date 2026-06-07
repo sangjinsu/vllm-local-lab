@@ -26,4 +26,5 @@ flowchart LR
 
 ## 관련 문서
 
-[환경 선택](../setup/00_choose_your_environment.md)
+- [환경 선택](../setup/00_choose_your_environment.md)
+- 더 깊이: [심화 8: 양자화 기법](../deep-dive/08_quantization_methods.md)

@@ -49,7 +49,27 @@
 | [LoRA와 QLoRA](appendix/07_lora_qlora.md) | adapter serving의 배경 |
 | [Mermaid 요약](appendix/08_mermaid_summary.md) | 전체 흐름 그림 |
 
-## 4. 검증 로그
+## 4. 심화 학습 (deep-dive)
+
+부록이 "개념 한 문장"이라면, deep-dive는 "왜 이렇게 동작하는가"를 내부 원리 수준에서 다룹니다.
+실습을 한 번 돌려본 뒤 읽으면 가장 효과가 좋습니다. 이번 심화는 **추론 최적화**에 집중합니다.
+
+| 문서 | 다루는 내용 |
+|---|---|
+| [심화 목차](deep-dive/00_index.md) | 심화 섹션 개요와 읽는 순서, 입문↔심화 매핑 |
+| [추론 성능 지표](deep-dive/01_inference_metrics.md) | TTFT·TPOT·throughput과 측정 방법 |
+| [KV cache와 PagedAttention](deep-dive/02_kv_cache_and_paged_attention.md) | KV cache 메모리 계산, GQA/MQA, 페이지 단위 관리 |
+| [배치와 스케줄링](deep-dive/03_batching_and_scheduling.md) | 연속 배치·chunked prefill·스케줄러 튜닝 |
+| [Prefix caching 내부 동작](deep-dive/04_prefix_caching_internals.md) | 블록 해시 공유 원리와 효과 조건 |
+| [Speculative decoding](deep-dive/05_speculative_decoding.md) | draft 제안→타깃 검증, 손익 조건 |
+| [멀티 GPU 병렬화](deep-dive/06_multi_gpu_parallelism.md) | tensor/pipeline 병렬과 비용 |
+| [vLLM 엔진 아키텍처](deep-dive/07_vllm_engine_architecture.md) | 엔진 계층과 요청 라이프사이클 |
+| [양자화 기법](deep-dive/08_quantization_methods.md) | BnB·GPTQ·AWQ·GGUF 비교와 trade-off |
+| [LoRA와 QLoRA](deep-dive/09_lora_and_qlora.md) | 저랭크 adapter 원리와 멀티 어댑터 서빙 |
+| [Sampling과 guided decoding](deep-dive/10_sampling_and_guided_decoding.md) | sampling 파라미터와 출력 형식 강제 |
+| [프레임워크 비교](deep-dive/11_framework_comparison.md) | vLLM·SGLang·TGI·TensorRT-LLM 선택 기준 |
+
+## 5. 검증 로그
 
 실제 환경에서 어떤 테스트를 진행했고 결과를 어떻게 해석했는지 보고 싶다면 다음 문서를 확인하세요.
 
@@ -57,7 +77,7 @@
 |---|---|
 | [2026-06-07 Apple Silicon smoke test 기록](test-runs/2026-06-07_apple_silicon_smoke.md) | local, Docker, kind smoke test와 benchmark 결과 |
 
-## 5. 막혔을 때
+## 6. 막혔을 때
 
 가장 먼저 다음 순서로 확인하세요.
 

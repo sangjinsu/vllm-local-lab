@@ -66,6 +66,12 @@ speculative decoding은 workload, model, sampling 설정, backend에 따라 결�
 
 `--speculative-config`를 shell에서 줄바꿈하면 `expected one argument` 오류가 납니다. JSON 값은 한 줄 문자열로 넘기세요.
 
+## 더 깊이 이해하기
+
+draft·타깃 모델의 동작과 "언제 빨라지고 언제 손해인지"는 다음 심화 문서에서 다룹니다.
+
+- [심화 5: Speculative decoding](../deep-dive/05_speculative_decoding.md)
+
 ## 다음 챕터
 
 [실습 9: Docker smoke test](09_docker_smoke.md)

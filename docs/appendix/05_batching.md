@@ -28,4 +28,5 @@ flowchart LR
 
 ## 관련 문서
 
-[실습 5: 로컬 benchmark](../labs/05_local_benchmark.md)
+- [실습 5: 로컬 benchmark](../labs/05_local_benchmark.md)
+- 더 깊이: [심화 3: 배치와 스케줄링](../deep-dive/03_batching_and_scheduling.md)

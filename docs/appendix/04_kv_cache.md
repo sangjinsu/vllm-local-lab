@@ -27,4 +27,5 @@ flowchart LR
 
 ## 관련 문서
 
-[실습 6: Prefix caching](../labs/06_prefix_caching.md)
+- [실습 6: Prefix caching](../labs/06_prefix_caching.md)
+- 더 깊이: [심화 2: KV cache와 PagedAttention](../deep-dive/02_kv_cache_and_paged_attention.md)

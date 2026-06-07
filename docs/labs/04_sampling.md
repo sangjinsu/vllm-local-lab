@@ -68,6 +68,12 @@ vLLM is an LLM serving engine. Write one practical reason to run a local vLLM se
 
 답변이 계속 틀리면 [문제 해결: 답변 내용이 틀릴 때](../setup/07_troubleshooting.md#답변-내용이-틀릴-때)를 확인하세요.
 
+## 더 깊이 이해하기
+
+각 sampling 파라미터의 의미와 출력 형식 강제(guided decoding)는 다음 심화 문서에서 다룹니다.
+
+- [심화 10: Sampling과 guided decoding](../deep-dive/10_sampling_and_guided_decoding.md)
+
 ## 다음 챕터
 
 [실습 5: 로컬 benchmark](05_local_benchmark.md)

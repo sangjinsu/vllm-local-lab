@@ -58,6 +58,13 @@ results/benchmarks/latest.md
 
 benchmark가 오래 걸리면 `BENCHMARK_NUM_PROMPTS`와 `BENCHMARK_REQUEST_RATE`를 낮추세요.
 
+## 더 깊이 이해하기
+
+benchmark 숫자의 의미와 튜닝 원리는 다음 심화 문서에서 다룹니다.
+
+- [심화 1: 추론 성능 지표](../deep-dive/01_inference_metrics.md)
+- [심화 3: 배치와 스케줄링](../deep-dive/03_batching_and_scheduling.md)
+
 ## 다음 챕터
 
 [실습 6: Prefix caching](06_prefix_caching.md)

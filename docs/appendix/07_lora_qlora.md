@@ -26,4 +26,5 @@ flowchart LR
 
 ## 관련 문서
 
-[실습 7: LoRA serving](../labs/07_lora_serving.md)
+- [실습 7: LoRA serving](../labs/07_lora_serving.md)
+- 더 깊이: [심화 9: LoRA와 QLoRA](../deep-dive/09_lora_and_qlora.md)
