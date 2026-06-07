@@ -2,3 +2,8 @@ resources:
   - ../../base/namespace.yaml
   - ../../base/deployment.yaml
   - ../../base/service.yaml
+
+images:
+  - name: vllm/vllm-openai
+    newName: vllm/vllm-openai-cpu
+    newTag: latest-arm64

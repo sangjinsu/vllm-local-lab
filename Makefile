@@ -20,16 +20,16 @@ benchmark-matrix:
 	$(PYTHON) scripts/run_benchmark_matrix.py
 
 docker-up:
-	docker compose -f deploy/docker/docker-compose.yml up
+	docker compose --env-file .env -f deploy/docker/docker-compose.yml up
 
 docker-down:
-	docker compose -f deploy/docker/docker-compose.yml down
+	docker compose --env-file .env -f deploy/docker/docker-compose.yml down
 
 k8s-create:
 	kind create cluster --config deploy/k8s/kind/kind-cluster.yaml
 
 k8s-apply:
-	kubectl apply -k deploy/k8s/overlays/kind-smoke
+	kubectl kustomize --load-restrictor=LoadRestrictionsNone deploy/k8s/overlays/kind-smoke | kubectl apply -f -
 
 k8s-forward:
 	kubectl port-forward -n vllm-lab svc/vllm-server 8000:8000

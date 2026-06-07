@@ -5,10 +5,13 @@ services:
     ipc: host
     environment:
       HF_TOKEN: ${HF_TOKEN:-}
+      VLLM_CPU_KVCACHE_SPACE: ${DOCKER_CPU_KVCACHE_SPACE:-1}
+      VLLM_CPU_OMP_THREADS_BIND: ${DOCKER_CPU_OMP_THREADS_BIND:-auto}
     volumes:
       - ${HF_HOME:-.cache/huggingface}:/root/.cache/huggingface
     ports:
       - "${DOCKER_PORT:-8000}:8000"
+    shm_size: ${DOCKER_SHM_SIZE:-1g}
     command:
       - --model
       - ${MODEL_DEFAULT:-Qwen/Qwen3-0.6B}
@@ -20,3 +23,9 @@ services:
       - ${DEFAULT_DTYPE:-auto}
       - --max-model-len
       - ${DEFAULT_MAX_MODEL_LEN:-4096}
+      - --enforce-eager
+      - --max-num-seqs
+      - ${DOCKER_MAX_NUM_SEQS:-1}
+      - --max-num-batched-tokens
+      - ${DOCKER_MAX_NUM_BATCHED_TOKENS:-256}
+      - --no-enable-prefix-caching

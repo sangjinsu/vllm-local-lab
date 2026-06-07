@@ -37,6 +37,30 @@ spec:
                   name: vllm-lab-env
                   key: DEFAULT_MAX_MODEL_LEN
                   optional: true
+            - name: K8S_CPU_KVCACHE_SPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: K8S_CPU_KVCACHE_SPACE
+                  optional: true
+            - name: K8S_CPU_OMP_THREADS_BIND
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: K8S_CPU_OMP_THREADS_BIND
+                  optional: true
+            - name: K8S_MAX_NUM_SEQS
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: K8S_MAX_NUM_SEQS
+                  optional: true
+            - name: K8S_MAX_NUM_BATCHED_TOKENS
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-lab-env
+                  key: K8S_MAX_NUM_BATCHED_TOKENS
+                  optional: true
             - name: HF_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -48,8 +72,14 @@ spec:
             - -c
           args:
             - >
+              export VLLM_CPU_KVCACHE_SPACE="${K8S_CPU_KVCACHE_SPACE:-1}";
+              export VLLM_CPU_OMP_THREADS_BIND="${K8S_CPU_OMP_THREADS_BIND:-auto}";
               vllm serve "${MODEL_DEFAULT:-Qwen/Qwen3-0.6B}"
               --host 0.0.0.0
               --port 8000
               --dtype "${DEFAULT_DTYPE:-auto}"
               --max-model-len "${DEFAULT_MAX_MODEL_LEN:-4096}"
+              --enforce-eager
+              --max-num-seqs "${K8S_MAX_NUM_SEQS:-1}"
+              --max-num-batched-tokens "${K8S_MAX_NUM_BATCHED_TOKENS:-256}"
+              --no-enable-prefix-caching

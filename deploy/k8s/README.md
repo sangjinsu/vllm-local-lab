@@ -6,11 +6,32 @@ production 배포 가이드가 아닙니다.
 
 ## 시작
 
+Apple Silicon + Colima 환경에서는 Docker VM memory를 8GiB 정도로 둡니다.
+
+```bash
+colima stop
+colima start --cpu 4 --memory 8
+```
+
+Docker 실습 9 서버가 아직 실행 중이면 8000 port가 겹치므로 먼저 종료합니다.
+
+```bash
+docker compose --env-file .env -f deploy/docker/docker-compose.yml down
+```
+
 ```bash
 kind create cluster --config deploy/k8s/kind/kind-cluster.yaml
 kubectl apply -f deploy/k8s/base/namespace.yaml
-kubectl create configmap vllm-lab-env -n vllm-lab --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -k deploy/k8s/overlays/kind-smoke
+kubectl create configmap vllm-lab-env -n vllm-lab \
+  --from-literal=MODEL_DEFAULT=Qwen/Qwen2.5-0.5B-Instruct \
+  --from-literal=DEFAULT_DTYPE=float32 \
+  --from-literal=DEFAULT_MAX_MODEL_LEN=512 \
+  --from-literal=K8S_CPU_KVCACHE_SPACE=1 \
+  --from-literal=K8S_CPU_OMP_THREADS_BIND=auto \
+  --from-literal=K8S_MAX_NUM_SEQS=1 \
+  --from-literal=K8S_MAX_NUM_BATCHED_TOKENS=256 \
+  --dry-run=client -o yaml | kubectl apply -f -
+kubectl kustomize --load-restrictor=LoadRestrictionsNone deploy/k8s/overlays/kind-smoke | kubectl apply -f -
 kubectl get pods -n vllm-lab
 kubectl port-forward -n vllm-lab svc/vllm-server 8000:8000
 ```

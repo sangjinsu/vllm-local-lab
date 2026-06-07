@@ -106,10 +106,10 @@ results/benchmarks/latest.md
 Docker:
 
 ```bash
-docker compose -f deploy/docker/docker-compose.yml up
+docker compose --env-file .env -f deploy/docker/docker-compose.yml up
 uv run python scripts/healthcheck.py
 uv run python scripts/call_chat.py
-docker compose -f deploy/docker/docker-compose.yml down
+docker compose --env-file .env -f deploy/docker/docker-compose.yml down
 ```
 
 Kubernetes kind는 Kubernetes 기본 지식이 있는 사용자만 진행하세요.
@@ -117,8 +117,16 @@ Kubernetes kind는 Kubernetes 기본 지식이 있는 사용자만 진행하세�
 ```bash
 kind create cluster --config deploy/k8s/kind/kind-cluster.yaml
 kubectl apply -f deploy/k8s/base/namespace.yaml
-kubectl create configmap vllm-lab-env -n vllm-lab --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -k deploy/k8s/overlays/kind-smoke
+kubectl create configmap vllm-lab-env -n vllm-lab \
+  --from-literal=MODEL_DEFAULT=Qwen/Qwen2.5-0.5B-Instruct \
+  --from-literal=DEFAULT_DTYPE=float32 \
+  --from-literal=DEFAULT_MAX_MODEL_LEN=512 \
+  --from-literal=K8S_CPU_KVCACHE_SPACE=1 \
+  --from-literal=K8S_CPU_OMP_THREADS_BIND=auto \
+  --from-literal=K8S_MAX_NUM_SEQS=1 \
+  --from-literal=K8S_MAX_NUM_BATCHED_TOKENS=256 \
+  --dry-run=client -o yaml | kubectl apply -f -
+kubectl kustomize --load-restrictor=LoadRestrictionsNone deploy/k8s/overlays/kind-smoke | kubectl apply -f -
 kubectl port-forward -n vllm-lab svc/vllm-server 8000:8000
 uv run python scripts/healthcheck.py
 uv run python scripts/call_chat.py

@@ -16,6 +16,30 @@ kind에서 vLLM server를 한 번 실행하고, `port-forward` 후 같은 Python
 
 `kind`와 `kubectl`을 사용할 수 있어야 합니다.
 
+Apple Silicon + Colima 환경이라면 Docker VM memory를 8GiB 정도로 둡니다.
+
+```bash
+colima stop
+colima start --cpu 4 --memory 8
+```
+
+Docker 실습 9 서버가 아직 켜져 있으면 port-forward와 충돌할 수 있으므로 먼저 끕니다.
+
+```bash
+docker compose --env-file .env -f deploy/docker/docker-compose.yml down
+```
+
+`.env`에는 kind smoke test용 작은 model과 CPU KV cache 값을 둡니다.
+
+```env
+MODEL_DEFAULT=Qwen/Qwen2.5-0.5B-Instruct
+DEFAULT_DTYPE=float32
+DEFAULT_MAX_MODEL_LEN=512
+K8S_CPU_KVCACHE_SPACE=1
+K8S_MAX_NUM_SEQS=1
+K8S_MAX_NUM_BATCHED_TOKENS=256
+```
+
 ## 실행
 
 cluster를 만듭니다.
@@ -28,8 +52,16 @@ resource를 적용합니다.
 
 ```bash
 kubectl apply -f deploy/k8s/base/namespace.yaml
-kubectl create configmap vllm-lab-env -n vllm-lab --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -k deploy/k8s/overlays/kind-smoke
+kubectl create configmap vllm-lab-env -n vllm-lab \
+  --from-literal=MODEL_DEFAULT=Qwen/Qwen2.5-0.5B-Instruct \
+  --from-literal=DEFAULT_DTYPE=float32 \
+  --from-literal=DEFAULT_MAX_MODEL_LEN=512 \
+  --from-literal=K8S_CPU_KVCACHE_SPACE=1 \
+  --from-literal=K8S_CPU_OMP_THREADS_BIND=auto \
+  --from-literal=K8S_MAX_NUM_SEQS=1 \
+  --from-literal=K8S_MAX_NUM_BATCHED_TOKENS=256 \
+  --dry-run=client -o yaml | kubectl apply -f -
+kubectl kustomize --load-restrictor=LoadRestrictionsNone deploy/k8s/overlays/kind-smoke | kubectl apply -f -
 kubectl get pods -n vllm-lab
 ```
 
@@ -53,6 +85,8 @@ uv run python scripts/call_chat.py
 ## 주의
 
 이 예제는 production deployment가 아닙니다.
+
+Apple Silicon kind overlay는 `vllm/vllm-openai-cpu:latest-arm64` image를 사용합니다. GPU image에서 `Failed to infer device type`이 나오면 CPU image overlay가 적용됐는지 확인하세요.
 
 ## 다음 단계
 
