@@ -101,6 +101,12 @@ results/benchmarks/latest.csv
 results/benchmarks/latest.md
 ```
 
+## 검증 로그
+
+실제 Apple Silicon 환경에서 진행한 테스트 과정과 benchmark 해석은 다음 문서에 정리되어 있습니다.
+
+- [2026-06-07 Apple Silicon smoke test 기록](docs/test-runs/2026-06-07_apple_silicon_smoke.md)
+
 ## 선택 Smoke Test
 
 Docker:

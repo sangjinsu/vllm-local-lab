@@ -41,6 +41,12 @@ uv run python scripts/run_benchmark.py
 
 `results/benchmarks/latest.md`가 생성되고 `Prefix Cache` 값이 `true`로 기록되면 성공입니다.
 
+## 이번 테스트에서 배운 점
+
+Apple Silicon CPU 환경의 작은 benchmark에서는 prefix caching을 켠 run이 더 빠르지 않았습니다.
+
+이번 기록에서는 `prefix_cache=true`가 평균 `2.487104s`, `prefix_cache=false`가 평균 `1.867628s`였습니다. 이 결과는 prefix caching이 쓸모없다는 뜻이 아니라, 반복 prefix가 충분히 길고 request pattern이 맞아야 효과가 보인다는 뜻입니다.
+
 ## 비교해 보기
 
 다음 값으로 바꾸고 다시 실행해 비교합니다.

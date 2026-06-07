@@ -49,7 +49,15 @@
 | [LoRA와 QLoRA](appendix/07_lora_qlora.md) | adapter serving의 배경 |
 | [Mermaid 요약](appendix/08_mermaid_summary.md) | 전체 흐름 그림 |
 
-## 4. 막혔을 때
+## 4. 검증 로그
+
+실제 환경에서 어떤 테스트를 진행했고 결과를 어떻게 해석했는지 보고 싶다면 다음 문서를 확인하세요.
+
+| 문서 | 내용 |
+|---|---|
+| [2026-06-07 Apple Silicon smoke test 기록](test-runs/2026-06-07_apple_silicon_smoke.md) | local, Docker, kind smoke test와 benchmark 결과 |
+
+## 5. 막혔을 때
 
 가장 먼저 다음 순서로 확인하세요.
 

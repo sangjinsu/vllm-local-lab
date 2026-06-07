@@ -94,6 +94,31 @@ vllm serve Qwen/Qwen2.5-0.5B-Instruct \
 
 그래도 느리면 `--max-model-len 256`, `--gpu-memory-utilization 0.15`, `--max-num-batched-tokens 256`까지 낮춰 마지막으로 확인합니다.
 
+## speculative config가 인자로 인식되지 않을 때
+
+다음처럼 JSON을 다음 줄에 따로 쓰면 shell은 `--speculative-config`의 값을 받지 못합니다.
+
+```bash
+vllm serve Qwen/Qwen2.5-0.5B-Instruct \
+  --speculative-config
+  '{"method":"ngram","num_speculative_tokens":4}'
+```
+
+한 줄 인자로 넘기세요.
+
+```bash
+vllm serve Qwen/Qwen2.5-0.5B-Instruct \
+  --speculative-config '{"method":"ngram","num_speculative_tokens":1,"prompt_lookup_min":2,"prompt_lookup_max":5}'
+```
+
+Apple Silicon CPU 환경에서는 작은 값부터 확인합니다.
+
+```env
+DEFAULT_TEMPERATURE=0
+DEFAULT_TOP_P=1.0
+SPECULATIVE_CONFIG_JSON={"method":"ngram","num_speculative_tokens":1,"prompt_lookup_min":2,"prompt_lookup_max":5}
+```
+
 ## `maximum context length` 또는 `400 Bad Request`
 
 다음과 비슷한 오류는 입력 prompt와 출력 token이 server의 context 길이를 넘었다는 뜻입니다.
@@ -122,6 +147,44 @@ uv run python scripts/call_chat.py
 local server 호출이 성공해도 작은 모델이 틀린 답을 할 수 있습니다. 예를 들어 vLLM을 잘못 풀이하는 답변이 나올 수 있습니다.
 
 setup 단계에서는 먼저 `Python client → localhost:8000/v1 → vLLM server` 경로가 열렸는지 확인하는 것이 목표입니다. 답변 품질은 model 크기, prompt, sampling, `DEFAULT_MAX_TOKENS`를 조정하면서 별도로 봅니다.
+
+## Docker에서 `Failed to infer device type`이 나올 때
+
+Apple Silicon + Colima처럼 GPU가 없는 Docker 환경에서 GPU image를 실행하면 device type 추론에 실패할 수 있습니다.
+
+CPU image를 사용하세요.
+
+```env
+DOCKER_IMAGE=vllm/vllm-openai-cpu:latest-arm64
+DEFAULT_DTYPE=float32
+DEFAULT_MAX_MODEL_LEN=512
+DOCKER_CPU_KVCACHE_SPACE=1
+DOCKER_MAX_NUM_SEQS=1
+DOCKER_MAX_NUM_BATCHED_TOKENS=256
+```
+
+Colima memory가 부족하면 모델 로딩 또는 KV cache allocation에서 실패할 수 있습니다.
+
+```bash
+colima stop
+colima start --cpu 4 --memory 8
+```
+
+## kind에서 memory 또는 port 문제가 날 때
+
+kind는 Colima 위에서 동작하므로 Colima memory가 너무 작으면 Pod가 시작하지 못할 수 있습니다.
+
+```bash
+kubectl get pods -n vllm-lab
+kubectl logs -n vllm-lab deploy/vllm-server --tail=100
+```
+
+Docker 실습 9 container가 아직 8000 port를 사용하고 있으면 `port-forward`와 충돌할 수 있습니다.
+
+```bash
+docker compose --env-file .env -f deploy/docker/docker-compose.yml down
+kubectl port-forward -n vllm-lab svc/vllm-server 8000:8000
+```
 
 ## LoRA adapter 경로가 실패할 때
 

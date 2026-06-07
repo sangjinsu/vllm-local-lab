@@ -46,6 +46,12 @@ uv run python scripts/healthcheck.py
 uv run python scripts/call_chat.py
 ```
 
+선택적으로 같은 benchmark script도 호출할 수 있습니다.
+
+```bash
+uv run python scripts/run_benchmark.py
+```
+
 ## 종료
 
 ```bash
@@ -55,6 +61,8 @@ docker compose --env-file .env -f deploy/docker/docker-compose.yml down
 ## 성공 확인
 
 local server 때와 같은 Python client가 Docker server에도 연결되면 성공입니다.
+
+이번 Apple Silicon + Colima smoke test에서는 평균 `1.449252s`, `11.040181 tok/s`, 완료 요청 `3`개를 확인했습니다. 이 수치는 환경 확인용 참고값입니다.
 
 ## 자주 막히는 지점
 

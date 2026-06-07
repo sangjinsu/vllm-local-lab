@@ -78,9 +78,17 @@ uv run python scripts/healthcheck.py
 uv run python scripts/call_chat.py
 ```
 
+선택적으로 benchmark도 실행할 수 있습니다.
+
+```bash
+uv run python scripts/run_benchmark.py
+```
+
 ## 성공 확인
 
 같은 Python client가 kind 위의 vLLM server에 연결되면 성공입니다.
+
+이번 Apple Silicon + Colima kind smoke test에서는 평균 `1.600385s`, `9.997597 tok/s`, 완료 요청 `3`개를 확인했습니다. Docker smoke test보다 약간 느릴 수 있으며, kind와 `port-forward` 경로가 추가되기 때문에 자연스러운 차이입니다.
 
 ## 주의
 
