@@ -43,6 +43,30 @@ nvidia-cudnn-frontend ... can't be installed because it doesn't have a source di
 
 대신 [Apple Silicon 환경](04_apple_silicon.md)의 vLLM source build 경로를 사용하세요.
 
+## server가 모델 로딩 직후 조용히 멈출 때 (FlashInfer / nvcc)
+
+Windows NVIDIA WSL처럼 `uv sync --extra serve`로 pip wheel vLLM을 설치한 환경에서, server 로그가 다음 부근에서 멈춘 뒤 더 진행되지 않을 수 있습니다.
+
+```text
+Using FlashAttention version 2
+```
+
+조금 기다리면 결국 다음 오류가 나타납니다.
+
+```text
+RuntimeError: Could not find nvcc and default cuda_home='/usr/local/cuda' doesn't exist
+```
+
+pip wheel에는 CUDA 런타임만 있고 `nvcc`(CUDA Toolkit)가 없어, FlashInfer가 top-k/top-p sampler 커널을 JIT 컴파일하지 못해 생기는 문제입니다.
+
+`.env`에서 FlashInfer sampler를 끄면 네이티브 sampler 경로로 우회합니다.
+
+```env
+DISABLE_FLASHINFER_SAMPLER=true
+```
+
+이 값을 켜면 `scripts/local_serve_help.py`가 생성하는 명령 앞에 `VLLM_USE_FLASHINFER_SAMPLER=0`이 붙습니다. FlashInfer 성능이 필요하면 대신 WSL에 CUDA Toolkit을 설치해 `nvcc`를 제공하세요.
+
 ## 모델이 메모리에 올라가지 않을 때
 
 작은 profile을 사용합니다.
@@ -53,6 +77,20 @@ DEFAULT_MAX_MODEL_LEN=2048
 ```
 
 `.env`를 바꾼 뒤에는 vLLM server를 다시 시작하세요.
+
+NVIDIA GPU에서 다음과 비슷한 오류가 나면, 가용 VRAM보다 vLLM이 예약하려는 양이 큰 경우입니다.
+
+```text
+Free memory on device cuda:0 (6.85/7.96 GiB) on startup is less than desired GPU memory utilization (0.92, 7.32 GiB)
+```
+
+특히 Windows + WSL에서는 Windows가 GPU를 상시 약 1GB 점유하므로, 8GB GPU에서 기본값 `0.92`는 실패합니다. `.env`에서 낮추세요.
+
+```env
+DEFAULT_GPU_MEMORY_UTILIZATION=0.80
+```
+
+또한 WSL에서 `torch.compile`/cudagraph 단계가 너무 느리면 `ENFORCE_EAGER=true`로 건너뛸 수 있습니다.
 
 CPU backend에서 다음과 비슷한 오류가 날 수도 있습니다.
 

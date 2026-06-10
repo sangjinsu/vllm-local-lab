@@ -85,6 +85,9 @@ class Settings:
     default_tokenizer: str | None = None
     default_dtype: str = "auto"
     default_max_model_len: int = 4096
+    default_gpu_memory_utilization: float | None = None
+    enforce_eager: bool = False
+    disable_flashinfer_sampler: bool = False
 
     hf_token: str | None = None
     hf_home: str = ".cache/huggingface"
@@ -139,6 +142,13 @@ class Settings:
             default_tokenizer=source.get("DEFAULT_TOKENIZER") or None,
             default_dtype=source.get("DEFAULT_DTYPE", "auto"),
             default_max_model_len=int(source.get("DEFAULT_MAX_MODEL_LEN", "4096")),
+            default_gpu_memory_utilization=(
+                float(source["DEFAULT_GPU_MEMORY_UTILIZATION"])
+                if source.get("DEFAULT_GPU_MEMORY_UTILIZATION")
+                else None
+            ),
+            enforce_eager=parse_bool(source.get("ENFORCE_EAGER"), False),
+            disable_flashinfer_sampler=parse_bool(source.get("DISABLE_FLASHINFER_SAMPLER"), False),
             hf_token=source.get("HF_TOKEN") or None,
             hf_home=source.get("HF_HOME", ".cache/huggingface"),
             default_temperature=float(source.get("DEFAULT_TEMPERATURE", "0.7")),
